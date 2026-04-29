@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VBSD – Viva Bem Sem Diabetes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#2E7D6B;--green-light:#4CAF93;--green-dark:#1B5E4F;
+  --accent:#E8F5E9;--accent2:#F0FBF8;--gold:#D4AF37;
+  --text:#1A2E2A;--muted:#5A7A74;--white:#fff;--border:#C8E6DF;
+  --shadow:0 4px 24px rgba(46,125,107,0.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;color:var(--text);background:var(--white);overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(27,94,79,0.97);backdrop-filter:blur(12px);padding:0 2rem}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-leaf{width:40px;height:40px;background:#4CAF93;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.logo-leaf svg{width:24px;height:24px}
+.logo-text{font-family:'Playfair Display',serif;font-size:1.6rem;color:#fff;line-height:1}
+.logo-sub{font-size:10px;color:rgba(255,255,255,0.7);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{color:rgba(255,255,255,0.85);text-decoration:none;font-size:0.9rem;font-weight:600;transition:color .2s}
+.nav-links a:hover{color:#4CAF93}
+.nav-cta{background:#4CAF93!important;color:#fff!important;padding:10px 22px;border-radius:8px;font-weight:700!important}
+.nav-cta:hover{background:#2E7D6B!important;color:#fff!important}
+
+/* HERO */
+.hero{padding:0;min-height:100vh;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;padding-top:70px}
+.hero-left{background:linear-gradient(160deg,#1B5E4F 0%,#2E7D6B 60%,#3d9a7e 100%);padding:80px 60px 80px 80px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.hero-left::before{content:'';position:absolute;top:-100px;left:-100px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,0.04);pointer-events:none}
+.hero-left::after{content:'';position:absolute;bottom:-80px;right:-80px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,0.04);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.15);color:#fff;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:1.8rem;border:1px solid rgba(255,255,255,0.2);width:fit-content;letter-spacing:.5px}
+.hero-badge span{width:6px;height:6px;background:#4CAF93;border-radius:50%;display:inline-block}
+h1{font-family:'Playfair Display',serif;font-size:3.8rem;font-weight:800;line-height:1.05;color:#fff;margin-bottom:1.5rem;letter-spacing:-1px}
+h1 em{font-style:normal;color:#9FE1CB}
+.hero-sub{font-size:1.1rem;color:rgba(255,255,255,0.85);line-height:1.75;margin-bottom:2.5rem;max-width:440px}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3rem}
+.btn-hero{padding:16px 32px;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .25s;display:inline-block;text-decoration:none;font-family:'Nunito',sans-serif}
+.btn-white{background:#fff;color:var(--green-dark)}
+.btn-white:hover{background:#E8F5E9;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.2)}
+.btn-outline-w{background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.5)}
+.btn-outline-w:hover{background:rgba(255,255,255,0.1);transform:translateY(-2px)}
+.hero-stats{display:flex;gap:2.5rem}
+.hstat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:#9FE1CB}
+.hstat-label{font-size:12px;color:rgba(255,255,255,0.7);font-weight:600;margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+.hero-right{position:relative;overflow:hidden}
+.hero-right img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(27,94,79,0.3) 0%,transparent 40%)}
+.hero-card{position:absolute;bottom:40px;left:30px;background:rgba(255,255,255,0.96);border-radius:16px;padding:18px 22px;backdrop-filter:blur(8px);min-width:220px;box-shadow:0 8px 32px rgba(0,0,0,0.15)}
+.hcard-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.hcard-icon{width:36px;height:36px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.hcard-icon svg{width:18px;height:18px;stroke:var(--green);fill:none;stroke-width:2;stroke-linecap:round}
+.hcard-title{font-weight:700;font-size:14px;color:var(--text)}
+.hcard-sub{font-size:11px;color:var(--muted)}
+.hcard-val{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;color:var(--green);line-height:1}
+.hcard-badge{display:inline-flex;align-items:center;gap:5px;background:#E8F5E9;color:#1B5E4F;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;margin-top:6px}
+
+/* SECTION BASE */
+section{padding:100px 2rem}
+.section-inner{max-width:1200px;margin:0 auto}
+.section-tag{display:inline-block;background:var(--accent);color:var(--green-dark);padding:5px 16px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:1rem;border:1px solid var(--border)}
+h2{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;margin-bottom:1rem;line-height:1.2;letter-spacing:-.5px;color:var(--text)}
+.section-sub{font-size:1.05rem;color:var(--muted);line-height:1.75;max-width:560px}
+.text-center{text-align:center}
+.text-center .section-sub{margin:0 auto}
+
+/* SOBRE / MISSÃO */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;margin-top:4rem}
+.about-img{position:relative;border-radius:24px;overflow:hidden;height:520px}
+.about-img img{width:100%;height:100%;object-fit:cover}
+.about-img-badge{position:absolute;bottom:24px;right:24px;background:var(--green-dark);color:#fff;padding:16px 20px;border-radius:14px;text-align:center}
+.aib-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:#9FE1CB}
+.aib-label{font-size:11px;color:rgba(255,255,255,0.8);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.about-content h2{margin-bottom:1.5rem}
+.about-content p{font-size:1rem;color:var(--muted);line-height:1.8;margin-bottom:1.25rem}
+.about-check{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.check-icon{width:22px;height:22px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.check-icon svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.check-text{font-size:.95rem;color:var(--text);line-height:1.6}
+
+/* FUNCIONALIDADES */
+.features-bg{background:#F4FAF8}
+.features-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:4rem;flex-wrap:wrap;gap:2rem}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.feat-card{background:#fff;border-radius:18px;padding:2rem;border:1px solid var(--border);transition:all .3s;position:relative;overflow:hidden}
+.feat-card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(46,125,107,0.12);border-color:#9FE1CB}
+.feat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--green-light));opacity:0;transition:opacity .3s}
+.feat-card:hover::after{opacity:1}
+.feat-icon{width:54px;height:54px;background:var(--accent);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
+.feat-icon svg{width:26px;height:26px;stroke:var(--green);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.feat-card h3{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:.75rem;color:var(--text)}
+.feat-card p{font-size:.88rem;color:var(--muted);line-height:1.75}
+
+/* PARA QUEM */
+.forwho-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;margin-top:4rem}
+.forwho-card{border-radius:24px;overflow:hidden;position:relative}
+.forwho-img{height:320px;overflow:hidden}
+.forwho-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.forwho-card:hover .forwho-img img{transform:scale(1.05)}
+.forwho-body{padding:2rem;background:#fff;border:1px solid var(--border);border-top:0;border-radius:0 0 24px 24px}
+.forwho-body h3{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:.75rem;color:var(--text)}
+.forwho-body p{font-size:.9rem;color:var(--muted);line-height:1.75;margin-bottom:1.25rem}
+.forwho-list{list-style:none}
+.forwho-list li{font-size:.88rem;color:var(--muted);padding:5px 0;display:flex;align-items:center;gap:9px}
+.forwho-list li::before{content:'';width:16px;height:16px;background:var(--green);border-radius:50%;flex-shrink:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");background-size:10px;background-repeat:no-repeat;background-position:center}
+
+/* GLICEMIA TABLE */
+.gli-bg{background:var(--green-dark);padding:100px 2rem}
+.gli-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.gli-left h2{color:#fff}
+.gli-left .section-tag{background:rgba(255,255,255,0.15);color:#9FE1CB;border-color:rgba(255,255,255,0.2)}
+.gli-left p{color:rgba(255,255,255,0.8);line-height:1.8;margin-bottom:1.5rem;font-size:.95rem}
+.gli-table{background:rgba(255,255,255,0.08);border-radius:16px;padding:1.5rem;border:1px solid rgba(255,255,255,0.1)}
+.gli-table-title{font-weight:700;color:#9FE1CB;font-size:.85rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem}
+.gli-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08)}
+.gli-row:last-child{border-bottom:0}
+.gli-label{font-size:.85rem;color:rgba(255,255,255,0.7);font-weight:600}
+.gli-range{font-size:.85rem;font-weight:700;color:#fff}
+.gli-badge{padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:700}
+.gli-ok{background:#1D9E75;color:#fff}
+.gli-warning{background:#E67E22;color:#fff}
+.gli-danger{background:#C0392B;color:#fff}
+.gli-card{background:#fff;border-radius:20px;padding:28px}
+.gli-display{background:linear-gradient(135deg,#1B5E4F,#2E7D6B);border-radius:14px;padding:28px;text-align:center;margin-bottom:1.5rem}
+.gli-number{font-family:'Playfair Display',serif;font-size:4rem;font-weight:700;color:#fff;line-height:1}
+.gli-unit{font-size:1rem;color:rgba(255,255,255,0.7);margin-top:4px}
+.gli-status-ok{display:inline-block;background:#1D9E75;color:#fff;padding:6px 20px;border-radius:20px;font-size:.85rem;font-weight:700;margin-top:12px}
+.gli-chart-area{height:80px;margin-bottom:1rem}
+.gli-chart-area svg{width:100%;height:100%}
+.gli-meta{font-size:.82rem;color:var(--muted);text-align:center}
+
+/* DEPOIMENTOS */
+.testimonials-bg{background:#F4FAF8}
+.testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-top:4rem}
+.test-card{background:#fff;border-radius:18px;padding:2rem;box-shadow:var(--shadow);border:1px solid var(--border)}
+.test-card p{font-size:.95rem;color:var(--text);line-height:1.7;margin-bottom:1.5rem}
+.test-author{display:flex;align-items:center;gap:15px}
+.test-avatar{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--green-light)}
+.test-name{font-weight:700;color:var(--green-dark);font-size:1rem}
+.test-role{font-size:.85rem;color:var(--muted)}
+
+/* CTA */
+.cta-section{background:linear-gradient(160deg,#1B5E4F 0%,#2E7D6B 60%,#3d9a7e 100%);padding:100px 2rem;color:#fff;text-align:center;position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;top:-100px;left:-100px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,0.04);pointer-events:none}
+.cta-section::after{content:'';position:absolute;bottom:-80px;right:-80px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,0.04);pointer-events:none}
+.cta-section h2{color:#fff;font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;margin-bottom:1rem;line-height:1.2;letter-spacing:-.5px}
+.cta-section p{font-size:1.05rem;color:rgba(255,255,255,0.8);line-height:1.75;max-width:600px;margin:0 auto 2.5rem auto}
+.cta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;margin-top:3rem;max-width:900px;margin-left:auto;margin-right:auto}
+.cta-item{background:rgba(255,255,255,0.1);border-radius:16px;padding:20px;text-align:center;border:1px solid rgba(255,255,255,0.2)}
+.cta-item-icon{font-size:2.5rem;margin-bottom:10px}
+.cta-item-title{font-weight:700;font-size:1.1rem;margin-bottom:5px}
+.cta-item-sub{font-size:.85rem;color:rgba(255,255,255,0.7)}
+.whatsapp-btn{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;padding:14px 28px;border-radius:10px;font-size:1rem;font-weight:700;text-decoration:none;transition:background .2s;margin-top:2rem}
+.whatsapp-btn:hover{background:#1DA851}
+.whatsapp-btn svg{width:22px;height:22px;fill:#fff}
+.btn-cta-white{background:#fff;color:var(--green-dark);padding:14px 28px;border-radius:10px;font-size:1rem;font-weight:700;text-decoration:none;transition:all .2s;margin-top:2rem}
+.btn-cta-white:hover{background:#E8F5E9;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.2)}
+
+/* FOOTER */
+footer{background:var(--green-dark);color:rgba(255,255,255,0.7);padding:60px 2rem 30px 2rem;font-size:.9rem}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:2rem;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.footer-brand .footer-logo{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:#fff}
+.footer-brand .footer-logo span{color:var(--green-light)}
+.footer-brand p{margin-top:1rem;line-height:1.7}
+.footer-col h4{font-weight:700;color:#fff;margin-bottom:1.2rem;font-size:1rem}
+.footer-col a{display:block;color:rgba(255,255,255,0.7);text-decoration:none;margin-bottom:.8rem;transition:color .2s}
+.footer-col a:hover{color:#fff}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:30px;flex-wrap:wrap;gap:1rem}
+.footer-bottom p{margin:0}
+
+/* RESPONSIVIDADE */
+@media(max-width:1024px){.hero{grid-template-columns:1fr}.hero-left{padding:60px 40px}.hero-right{min-height:500px}.hero-card{bottom:20px;left:20px}.about-grid{grid-template-columns:1fr;gap:3rem}.about-img{height:400px}.features-grid{grid-template-columns:repeat(2,1fr)}.forwho-grid{grid-template-columns:1fr}.gli-inner{grid-template-columns:1fr;gap:3rem}.footer-top{grid-template-columns:1fr 1fr;gap:3rem}}
+@media(max-width:768px){.nav-links{display:none}.nav-inner{justify-content:center}.hero-left{text-align:center;padding:50px 30px}.hero-badge{margin-left:auto;margin-right:auto}.hero-btns{justify-content:center}.hero-stats{justify-content:center}.section-inner{padding:0 1rem}.features-grid{grid-template-columns:1fr}.forwho-body{padding:1.5rem}.gli-left{text-align:center}.gli-left .section-tag{margin-left:auto;margin-right:auto}.gli-table{margin-top:2rem}.footer-top{grid-template-columns:1fr}}
+@media(max-width:480px){h1{font-size:2.8rem}.hero-sub{font-size:1rem}.btn-hero{padding:12px 24px;font-size:.9rem}.hstat-num{font-size:1.8rem}.section-tag{font-size:11px;padding:4px 12px}h2{font-size:2.2rem}.section-sub{font-size:.95rem}.feat-card{padding:1.5rem}.feat-icon{width:48px;height:48px;margin-bottom:1rem}.feat-icon svg{width:22px;height:22px}.feat-card h3{font-size:1.05rem}.forwho-body h3{font-size:1.2rem}.forwho-body p{font-size:.85rem}.gli-display{padding:20px}.gli-number{font-size:3rem}.whatsapp-btn{padding:12px 24px;font-size:.9rem}.btn-cta-white{padding:12px 24px;font-size:.9rem}.footer-brand .footer-logo{font-size:1.8rem}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-leaf">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div>
+        <div class="logo-text">VBSD</div>
+        <div class="logo-sub">Viva Bem Sem Diabetes</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#sobre">Sobre</a>
+      <a href="#funcionalidades">Funcionalidades</a>
+      <a href="#para-quem">Para Quem</a>
+      <a href="#planos">Planos</a>
+      <a href="#contato" class="nav-cta">Contato</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-badge"><span></span> NOVO EM 2026</div>
+    <h1>Controle seu <em>Diabetes</em><br>de forma inteligente.</h1>
+    <p class="hero-sub">O VBSD é o seu aplicativo completo para gerenciar a glicemia, medicamentos, alimentação e exercícios. Tenha mais saúde e qualidade de vida.</p>
+    <div class="hero-btns">
+      <a href="https://pay.hotmart.com/K105538229I" target="_blank" class="btn-hero btn-white">Comprar Agora por R$19,90 →</a>
+      <a href="#funcionalidades" class="btn-hero btn-outline-w">Ver Funcionalidades</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hstat-num">+50K</div>
+        <div class="hstat-label">Usuários</div>
+      </div>
+      <div>
+        <div class="hstat-num">98%</div>
+        <div class="hstat-label">Satisfação</div>
+      </div>
+      <div>
+        <div class="hstat-num">#1</div>
+        <div class="hstat-label">App no Brasil</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663599642123/pLrovfntZOvLXxFV.png" alt="Médico apresentando o aplicativo VBSD">
+    <div class="hero-overlay"></div>
+    <div class="hero-card">
+      <div class="hcard-top">
+        <div class="hcard-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </div>
+        <div>
+          <div class="hcard-title">Lembrete de Medicamento</div>
+          <div class="hcard-sub">Insulina - 10h00</div>
+        </div>
+      </div>
+      <div class="hcard-val">10:00</div>
+      <div class="hcard-badge">Próxima dose</div>
+    </div>
+  </div>
+</section>
+
+<section id="sobre">
+  <div class="section-inner">
+    <div class="section-tag">Sobre o VBSD</div>
+    <div class="about-grid">
+      <div class="about-img">
+        <img src="https://images.unsplash.com/photo-1571019625390-256569614470?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Médico e paciente conversando">
+        <div class="about-img-badge">
+          <div class="aib-num">+10</div>
+          <div class="aib-label">Anos de experiência</div>
+        </div>
+      </div>
+      <div class="about-content">
+        <h2>Sua saúde, nossa prioridade.</h2>
+        <p>O VBSD nasceu da necessidade de oferecer uma ferramenta completa e acessível para o controle do diabetes no Brasil. Desenvolvido por especialistas, nosso aplicativo simplifica o monitoramento diário e ajuda você a viver melhor.</p>
+        <p>Acreditamos que o conhecimento e o acompanhamento são as chaves para uma vida plena, mesmo com diabetes. Por isso, o VBSD oferece recursos intuitivos e personalizados para cada usuário.</p>
+        <div class="about-check">
+          <div class="check-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="check-text">Acompanhamento de glicemia, pressão e SpO2.</div>
+        </div>
+        <div class="about-check">
+          <div class="check-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="check-text">Lembretes de medicamentos e consultas.</div>
+        </div>
+        <div class="about-check">
+          <div class="check-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="check-text">Diário alimentar e plano de exercícios.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="funcionalidades" class="features-bg">
+  <div class="section-inner">
+    <div class="features-header">
+      <div>
+        <div class="section-tag">Recursos Poderosos</div>
+        <h2>Tudo que você precisa<br>em um só lugar.</h2>
+      </div>
+      <p class="section-sub" style="max-width:400px">O VBSD foi pensado para simplificar sua rotina e te dar o controle total sobre sua saúde, com funcionalidades intuitivas e eficazes.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </div>
+        <h3>Controle de Glicemia</h3>
+        <p>Registre seus níveis de glicose, visualize gráficos de tendência e receba alertas personalizados para manter tudo sob controle.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </div>
+        <h3>Lembretes de Medicamentos</h3>
+        <p>Nunca mais esqueça uma dose. Configure lembretes para seus medicamentos e receba notificações na hora certa.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </div>
+        <h3>Diário Alimentar</h3>
+        <p>Registre suas refeições, conte carboidratos e entenda como sua alimentação afeta seus níveis de glicose.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </div>
+        <h3>Plano de Exercícios</h3>
+        <p>Receba sugestões de atividades físicas adaptadas para você e acompanhe seu progresso para uma vida mais ativa.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </div>
+        <h3>Relatórios Completos</h3>
+        <p>Gere relatórios detalhados para compartilhar com seu médico, facilitando o acompanhamento e ajuste do tratamento.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </div>
+        <h3>Funciona Offline</h3>
+        <p>Acesse seus dados e registre informações mesmo sem conexão com a internet. Seus dados são sincronizados automaticamente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="para-quem">
+  <div class="section-inner">
+    <div class="text-center">
+      <div class="section-tag">Para Quem?</div>
+      <h2>O VBSD é para você.</h2>
+      <p class="section-sub">Seja você um paciente buscando mais controle ou um profissional de saúde, o VBSD é a ferramenta ideal.</p>
+    </div>
+    <div class="forwho-grid">
+      <div class="forwho-card">
+        <div class="forwho-img">
+          <img src="https://images.unsplash.com/photo-1530026405186-ed1f139313f8?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Paciente usando o aplicativo">
+        </div>
+        <div class="forwho-body">
+          <h3>Para Pacientes</h3>
+          <p>Assuma o controle do seu diabetes com facilidade e confiança. O VBSD te ajuda a monitorar, aprender e viver melhor.</p>
+          <ul class="forwho-list">
+            <li>Controle diário simplificado.</li>
+            <li>Alertas e lembretes personalizados.</li>
+            <li>Informações claras e acessíveis.</li>
+            <li>Suporte para uma vida mais saudável.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="forwho-card">
+        <div class="forwho-img">
+          <img src="https://images.unsplash.com/photo-1584516150909-df347d51596f?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Médico analisando dados">
+        </div>
+        <div class="forwho-body">
+          <h3>Para Profissionais de Saúde</h3>
+          <p>Tenha acesso a dados precisos e relatórios completos para otimizar o tratamento e acompanhamento de seus pacientes.</p>
+          <ul class="forwho-list">
+            <li>Relatórios detalhados de glicemia.</li>
+            <li>Histórico completo de medicamentos.</li>
+            <li>Visão abrangente do estilo de vida do paciente.</li>
+            <li>Ferramenta de apoio à decisão clínica.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="gli-bg">
+  <div class="gli-inner">
+    <div class="gli-left">
+      <div class="section-tag">Monitoramento</div>
+      <h2>Glicemia sob controle,<br>sempre.</h2>
+      <p>Com o VBSD, você registra seus níveis de glicose de forma rápida e intuitiva. Acompanhe as tendências, identifique padrões e tome decisões mais informadas sobre sua saúde.</p>
+      <div class="gli-table">
+        <div class="gli-table-title">Níveis de Glicemia (mg/dL)</div>
+        <div class="gli-row">
+          <div class="gli-label">Jejum</div>
+          <div class="gli-range">&lt; 100</div>
+          <div class="gli-badge gli-ok">Normal</div>
+        </div>
+        <div class="gli-row">
+          <div class="gli-label">Pós-prandial (2h)</div>
+          <div class="gli-range">&lt; 140</div>
+          <div class="gli-badge gli-ok">Normal</div>
+        </div>
+        <div class="gli-row">
+          <div class="gli-label">Pré-diabetes</div>
+          <div class="gli-range">100 - 125</div>
+          <div class="gli-badge gli-warning">Atenção</div>
+        </div>
+        <div class="gli-row">
+          <div class="gli-label">Diabetes</div>
+          <div class="gli-range">&gt; 126</div>
+          <div class="gli-badge gli-danger">Crítico</div>
+        </div>
+      </div>
+    </div>
+    <div class="gli-right">
+      <div class="gli-card">
+        <div class="gli-display">
+          <div class="gli-number">112</div>
+          <div class="gli-unit">mg/dL</div>
+          <div class="gli-status-ok">Nível Estável</div>
+        </div>
+        <div class="gli-chart-area">
+          <svg viewBox="0 0 100 80" preserveAspectRatio="none" fill="none" stroke="#4CAF93" stroke-width="2">
+            <path d="M0 70 Q 25 30, 50 60 T 100 40"/>
+          </svg>
+        </div>
+        <div class="gli-meta">Última medição: 15/04/2026, 08:30</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="depoimentos" class="testimonials-bg">
+  <div class="section-inner text-center">
+    <div class="section-tag">O que dizem</div>
+    <h2>Histórias de sucesso<br>que nos inspiram.</h2>
+    <p class="section-sub">Veja como o VBSD tem transformado a vida de milhares de pessoas no controle do diabetes.</p>
+    <div class="testimonials-grid">
+      <div class="test-card">
+        <p>"O VBSD mudou a forma como lido com meu diabetes. Os lembretes de medicamentos são um salva-vidas e os gráficos me ajudam a entender melhor meu corpo."</p>
+        <div class="test-author">
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Foto de Maria Silva" class="test-avatar">
+          <div>
+            <div class="test-name">Maria Silva</div>
+            <div class="test-role">Diabética tipo 2 · São Paulo</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card">
+        <p>"Como médico, recomendo o VBSD para todos os meus pacientes. A facilidade de gerar relatórios detalhados é um diferencial enorme para o acompanhamento."</p>
+        <div class="test-author">
+          <img src="https://images.unsplash.com/photo-1612349317033-100d04d20d7e?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Foto de Dr. Carlos Mendes" class="test-avatar">
+          <div>
+            <div class="test-name">Dr. Carlos Mendes</div>
+            <div class="test-role">Endocrinologista · Rio de Janeiro</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card">
+        <p>"Finalmente um aplicativo que realmente me ajuda! O diário alimentar é super prático e me faz pensar duas vezes antes de comer algo que não devo."</p>
+        <div class="test-author">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Foto de Ana Paula Ferreira" class="test-avatar">
+          <div><div class="test-name">Ana Paula Ferreira</div><div class="test-role">Diabética tipo 1 · Brasília</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREÇOS -->
+<section id="planos">
+  <div class="section-inner pricing-bg" style="background:transparent">
+    <div class="text-center">
+      <div class="section-tag">Planos e preços</div>
+      <h2>Licença individual<br>para cada usuário</h2>
+      <p class="section-sub">Cada licença é gerada individualmente pelo desenvolvedor e ativada no seu dispositivo com uma chave exclusiva.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="plan-name">Compre já¹</div>
+        <div class="plan-price"><sup>R$</sup>19,90<span class="per">/promocional</span></div>
+        <p class="plan-desc">Para conhecer e experimentar o VBSD sem compromisso.</p>
+        <ul class="plan-feats">
+          <li>Controle de glicemia</li>
+          <li>Gráficos de evolução Grlicemico</li>
+          <li>Controle de medicamentos cadastrados</li>
+          <li>Diário alimentar</li>
+          <li>Cadastro de Exercícios Diários</li>
+          <li>App mobile</li>
+        </ul>
+        <a href="https://go.hotmart.com/K105538229I" target="_blank" class="plan-btn btn-outline">Comece Já </a>
+      </div>
+      <div class="price-card">
+        <div class="pop-badge">✨ Novo!</div>
+        <div class="plan-name">Preço unico</div>
+        <div class="plan-price"><sup>R$</sup>19,90<span class="per">/mês</span></div>
+        <p class="plan-desc">Acesso completo a todos os recursos com pagamento único.</p>
+        <ul class="plan-feats">
+          <li>Todos os recursos premium</li>
+          <li>Glicemia ilimitada + gráficos</li>
+          <li>Medicamentos ilimitados + alarmes</li>
+          <li>Relatórios completos (PDF/WhatsApp)</li>
+          <li>Backup e restauração de dados</li>
+          <li>Plano de exercícios semanal</li>
+          <li>Funciona 100% offline</li>
+          <li>Suporte via WhatsApp</li>
+        </ul>
+        <a href="https://pay.hotmart.com/K105538229I" target="_blank" class="plan-btn btn-fill">Assinar Agora →</a>
+      </div>
+      <div class="price-card featured">
+        <div class="pop-badge">⭐ Mais popular</div>
+        <div class="plan-name">Premium Vitalício</div>
+        <div class="plan-price"><sup>R$</sup>97<span class="per"> único</span></div>
+        <p class="plan-desc">Pagamento único, licença vitalícia. Para quem leva a saúde a sério.</p>
+        <ul class="plan-feats">
+          <li>Glicemia ilimitada + gráficos</li>
+          <li>Medicamentos ilimitados + alarmes</li>
+          <li>Controle de pressão e SpO2</li>
+          <li>Relatórios completos (PDF/WhatsApp)</li>
+          <li>Backup e restauração de dados</li>
+          <li>Plano de exercícios semanal</li>
+          <li>Funciona 100% offline</li>
+          <li>Suporte via WhatsApp</li>
+        </ul>
+        <a href="https://pay.hotmart.com/K105538229I" target="_blank" class="plan-btn btn-fill">Adquirir licença →</a>
+      </div>
+      <div class="price-card">
+        <div class="plan-name">Premium Anual</div>
+        <div class="plan-price"><sup>R$</sup>49<span class="per">/ano</span></div>
+        <p class="plan-desc">Para quem prefere renovar anualmente com valor reduzido.</p>
+        <ul class="plan-feats">
+          <li>Todos os recursos premium</li>
+          <li>Glicemia ilimitada + gráficos</li>
+          <li>Medicamentos ilimitados + alarmes</li>
+          <li>Relatórios completos</li>
+          <li>Backup de dados</li>
+          <li>Suporte via WhatsApp</li>
+        </ul>
+        <a href="https://pay.hotmart.com/K105538229I" target="_blank" class="plan-btn btn-outline">Adquirir licença</a>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:2rem;padding:1.5rem;background:#E8F5E9;border-radius:14px;border:1px solid #C8E6C9;max-width:700px;margin-left:auto;margin-right:auto">
+      <div style="font-weight:700;color:var(--green-dark);margin-bottom:.5rem">🔐 Como funciona a licença?</div>
+      <div style="font-size:.88rem;color:var(--muted);line-height:1.75">Após o pagamento, você recebe uma <strong>chave exclusiva</strong> no formato <code style="background:#fff;padding:2px 8px;border-radius:4px;font-size:.82rem">XXXX-XXXX-XXXX-XXXX</code>. Insira no app para ativar. Cada licença é válida para <strong>1 usuário</strong> e gerada pelo desenvolvedor. Contato: <a href="https://wa.me/5561984025224" style="color:var(--green);font-weight:700;text-decoration:none">+55 61 98402-5224</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / CONTATO -->
+<section class="cta-section" id="contato">
+  <div class="section-inner" style="position:relative;z-index:2">
+    <div class="section-tag" style="background:rgba(255,255,255,0.15);color:#9FE1CB;border-color:rgba(255,255,255,0.2)">Comece hoje</div>
+    <h2 style="color:#fff;font-family:'Playfair Display',serif">Cuide da sua saúde<br>com quem entende</h2>
+    <p>Junte-se a mais de 50.000 pessoas que já transformaram o controle do diabetes com o VBSD. Licença vitalícia a partir de R$ 97.</p>
+    <div class="cta-grid">
+      <div class="cta-item">
+        <div class="cta-item-icon">🔐</div>
+        <div class="cta-item-title">Licença individual</div>
+        <div class="cta-item-sub">Chave exclusiva por usuário</div>
+      </div>
+      <div class="cta-item">
+        <div class="cta-item-icon">📱</div>
+        <div class="cta-item-title">Offline</div>
+        <div class="cta-item-sub">Funciona sem internet</div>
+      </div>
+      <div class="cta-item">
+        <div class="cta-item-icon">💬</div>
+        <div class="cta-item-title">Suporte WhatsApp</div>
+        <div class="cta-item-sub">Atendimento direto</div>
+      </div>
+    </div>
+    <a href="https://pay.hotmart.com/K105538229I" target="_blank" class="whatsapp-btn">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Comprar Agora por R$19,90
+    </a>
+    <a href="#planos" class="btn-cta-white" style="margin-left:1rem">Ver planos →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">VBSD<span></span></div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px">Viva Bem Sem Diabetes</div>
+        <p>Seu companheiro diário no controle do diabetes. Tecnologia, cuidado e saúde na palma da mão.</p>
+        <a href="https://pay.hotmart.com/K105538229I" style="display:inline-flex;align-items:center;gap:8px;margin-top:1rem;background:#25D366;color:#fff;padding:10px 18px;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Comprar Agora por R$19,90
+        </a>
+      </div>
+      <div class="footer-col">
+        <h4>App</h4>
+        <a href="#funcionalidades">Glicemia</a>
+        <a href="#funcionalidades">Medicamentos</a>
+        <a href="#funcionalidades">Pressão Arterial</a>
+        <a href="#funcionalidades">Alimentação</a>
+        <a href="#funcionalidades">Exercícios</a>
+        <a href="#funcionalidades">Relatórios</a>
+      </div>
+      <div class="footer-col">
+        <h4>Planos</h4>
+        <a href="#planos">Gratuito</a>
+        <a href="#planos">Premium Mensal</a>
+        <a href="#planos">Premium Vitalício</a>
+        <a href="#planos">Premium Anual</a>
+        <a href="#contato">Como ativar</a>
+      </div>
+      <div class="footer-col">
+        <h4>Suporte</h4>
+        <a href="https://wa.me/5561984025224" target="_blank">WhatsApp</a>
+        <a href="#sobre">Sobre o VBSD</a>
+        <a href="#para-quem">Para médicos</a>
+        <a href="#para-quem">Para pacientes</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 VBSD – Viva Bem Sem Diabetes. Todos os direitos reservados.</p>
+      <p>Feito com cuidado para a saúde brasileira 💚</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'})}
+  })
+});
+<!-- POPUP DASHBOARD VENDAS - COLE ANTES DE </BODY> -->
+<style>
+.vendas-popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
+.vendas-box{background:white;border-radius:20px;width:95%;max-width:800px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.vendas-hero{background:linear-gradient(135deg,#2E7D6B,#4CAF50);color:white;padding:40px;text-align:center;border-radius:20px 20px 0 0;margin:-20px -20px 20px -20px}
+.vendas-hero h2{font-size:2rem;margin-bottom:10px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin:20px 0}
+.stat-box{background:#f8fff8;padding:20px;border-radius:12px;text-align:center;border:2px solid #e8f5e8}
+.stat-num{font-size:2rem;font-weight:bold;color:#2E7D6B;margin-bottom:5px}
+.stat-label{font-size:0.8rem;color:#666;text-transform:uppercase;letter-spacing:1px}
+.btn-vendas{background:linear-gradient(135deg,#D4AF37,#daa520);color:white;border:none;padding:12px 24px;border-radius:10px;font-weight:bold;cursor:pointer;font-size:1rem;width:100%;margin:10px 0}
+.btn-vendas:hover{opacity:0.9}
+.login-form{padding:30px;text-align:center}
+.login-form input{width:100%;padding:12px;margin:10px 0;border:2px solid #ddd;border-radius:8px;font-size:1rem}
+.tabela{width:100%;border-collapse:collapse;margin:20px 0;font-size:0.9rem}
+.tabela th{background:#f0f8f0;color:#2E7D6B;padding:12px;font-weight:600}
+.tabela td{padding:10px;border-bottom:1px solid #eee}
+.copy-btn{background:#28a745;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem}
+#vendas-toggle{position:fixed;bottom:30px;right:30px;background:linear-gradient(135deg,#D4AF37,#daa520);color:white;border:none;border-radius:50%;width:60px;height:60px;font-size:1.5rem;cursor:pointer;box-shadow:0 8px 20px rgba(212,175,55,0.4);z-index:10000}
+@media(max-width:768px){.vendas-box{width:98%;padding:10px}.stats-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+
+<!-- BOTÃO FLUTUANTE (sempre visível) -->
+<button id="vendas-toggle" onclick="toggleVendas()" title="Dashboard Vendas">💰</button>
+
+<!-- POPUP DASHBOARD -->
+<div id="vendas-popup" class="vendas-popup">
+    <div class="vendas-box">
+        <div class="vendas-hero">
+            <h2>💰 Dashboard Vendas VBSD</h2>
+            <p>Licença Premium R$97 - Vitalícia</p>
+        </div>
+        
+        <div id="login-vendas" class="login-form">
+            <h3>🔐 Entre no Painel</h3>
+            <input type="password" id="senha-vendas" placeholder="Senha (vendas2026)">
+            <button class="btn-vendas" onclick="loginVendas()">Entrar</button>
+        </div>
+        
+        <div id="painel-vendas" style="display:none;padding:20px">
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-num">120</div>
+                    <div class="stat-label">Vendas Hoje</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">R$ 2.388</div>
+                    <div class="stat-label">Faturamento Hoje</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">850</div>
+                    <div class="stat-label">Vendas Mês</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">R$ 16.915</div>
+                    <div class="stat-label">Faturamento Mês</div>
+                </div>
+            </div>
+            
+            <h3>Links de Venda Hotmart</h3>
+            <table class="tabela">
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Link</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Link Direto de Venda (R$19,90)</td>
+                        <td><input type="text" value="https://pay.hotmart.com/K105538229I" readonly id="link1">
+                        </td>
+                        <td><button class="copy-btn" onclick="copyToClipboard('link1')">Copiar</button></td>
+                    </tr>
+                    <tr>
+                        <td>Página de Vendas (Checkout Padrão)</td>
+                        <td><input type="text" value="https://go.hotmart.com/K105538229I" readonly id="link2">
+                        </td>
+                        <td><button class="copy-btn" onclick="copyToClipboard('link2')">Copiar</button></td>
+                    </tr>
+                    <tr>
+                        <td>Página de Vendas (Checkout Otimizado)</td>
+                        <td><input type="text" value="https://go.hotmart.com/K105538229I?dp=1" readonly id="link3">
+                        </td>
+                        <td><button class="copy-btn" onclick="copyToClipboard('link3')">Copiar</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Últimas Vendas</h3>
+            <table class="tabela">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Produto</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>27/04/2026 14:30</td>
+                        <td>VBSD Premium Mensal</td>
+                        <td>R$ 19,90</td>
+                        <td>Aprovado</td>
+                    </tr>
+                    <tr>
+                        <td>27/04/2026 14:20</td>
+                        <td>VBSD Premium Vitalício</td>
+                        <td>R$ 97,00</td>
+                        <td>Aprovado</td>
+                    </tr>
+                    <tr>
+                        <td>27/04/2026 14:10</td>
+                        <td>VBSD Premium Anual</td>
+                        <td>R$ 49,00</td>
+                        <td>Aprovado</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn-vendas" onclick="logoutVendas()">Sair</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleVendas() {
+    const popup = document.getElementById('vendas-popup');
+    popup.style.display = popup.style.display === 'flex' ? 'none' : 'flex';
+}
+
+function loginVendas() {
+    const senhaInput = document.getElementById('senha-vendas');
+    const senha = senhaInput.value;
+    if (senha === 'vendas2026') {
+        document.getElementById('login-vendas').style.display = 'none';
+        document.getElementById('painel-vendas').style.display = 'block';
+    } else {
+        alert('Senha incorreta!');
+    }
+}
+
+function logoutVendas() {
+    document.getElementById('login-vendas').style.display = 'block';
+    document.getElementById('painel-vendas').style.display = 'none';
+    document.getElementById('senha-vendas').value = '';
+}
+
+function copyToClipboard(elementId) {
+    const input = document.getElementById(elementId);
+    input.select();
+    input.setSelectionRange(0, 99999); // For mobile devices
+    document.execCommand('copy');
+    alert('Link copiado: ' + input.value);
+}
+</script>
+
+</body>
+</html>
