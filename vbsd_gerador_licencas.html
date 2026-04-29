@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VBSD — Painel do Vendedor</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #2E7D6B;
+  --primary-dark: #1B5E4F;
+  --primary-light: #4CAF93;
+  --gold: #D4AF37;
+  --gold-dark: #B8860B;
+  --gold-light: #FFF8DC;
+  --danger: #C0392B;
+  --danger-light: #FADBD8;
+  --ok: #27AE60;
+  --ok-light: #D5F5E3;
+  --bg: #F4FAF8;
+  --surface: #FFFFFF;
+  --text: #1A2E2A;
+  --text-muted: #5A7A74;
+  --border: #C8E6DF;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 16px rgba(46,125,107,0.12);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ===== LOGIN DO VENDEDOR ===== */
+#vendor-login {
+  position: fixed; inset: 0;
+  background: linear-gradient(135deg, #1B5E4F 0%, #2E7D6B 50%, #4CAF93 100%);
+  display: flex; align-items: center; justify-content: center; z-index: 9999;
+}
+.login-box {
+  background: white; border-radius: 24px; padding: 40px 32px; width: 380px; max-width: 92vw;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center;
+}
+.login-logo { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--primary); }
+.login-sub { font-size: 0.78rem; color: var(--text-muted); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 28px; }
+.login-box input { width: 100%; padding: 13px 16px; border: 2px solid var(--border); border-radius: var(--radius); font-size: 1rem; font-family: 'Nunito', sans-serif; outline: none; margin-bottom: 14px; transition: border .2s; }
+.login-box input:focus { border-color: var(--primary); }
+.login-btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: var(--radius); font-size: 1rem; font-weight: 700; cursor: pointer; font-family: 'Nunito', sans-serif; }
+.login-btn:hover { background: var(--primary-dark); }
+.login-error { color: var(--danger); font-size: 0.88rem; margin-top: 8px; display: none; }
+
+/* ===== PAINEL PRINCIPAL ===== */
+#painel { display: none; }
+.top-bar {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: white; padding: 18px 32px; display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+.top-bar-logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; }
+.top-bar-sub { font-size: 0.72rem; opacity: 0.8; letter-spacing: 1px; text-transform: uppercase; }
+.btn-logout { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.85rem; }
+.btn-logout:hover { background: rgba(255,255,255,0.25); }
+
+.main-content { max-width: 1100px; margin: 0 auto; padding: 32px 20px; }
+
+.section-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--primary-dark); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+
+.card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px; margin-bottom: 24px; border: 1px solid var(--border); }
+.card-title { font-size: 1rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-weight: 700; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.form-control { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 0.95rem; font-family: 'Nunito', sans-serif; outline: none; transition: border .2s; background: white; color: var(--text); }
+.form-control:focus { border-color: var(--primary); }
+select.form-control { cursor: pointer; }
+
+.btn { padding: 12px 24px; border: none; border-radius: var(--radius-sm); font-weight: 700; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 0.95rem; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+.btn-gold { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: white; }
+.btn-gold:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { opacity: 0.9; }
+.btn-secondary { background: #f0f0f0; color: var(--text); border: 2px solid var(--border); }
+.btn-sm { padding: 7px 14px; font-size: 0.82rem; }
+.btn-copy { background: var(--ok); color: white; padding: 8px 16px; border-radius: var(--radius-sm); border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.85rem; transition: all .2s; }
+.btn-copy:hover { opacity: 0.85; }
+
+/* ===== RESULTADO DA LICENÇA ===== */
+.license-result {
+  display: none; background: linear-gradient(135deg, #fffbe6, #fff3cc);
+  border: 2px solid var(--gold); border-radius: var(--radius); padding: 24px; margin-top: 20px;
+}
+.license-result.show { display: block; animation: fadeIn .4s ease; }
+.key-display {
+  font-family: 'Courier New', monospace; font-size: 1.6rem; font-weight: 700;
+  letter-spacing: 4px; color: var(--gold-dark); background: white;
+  border: 2px dashed var(--gold); border-radius: var(--radius-sm);
+  padding: 16px; text-align: center; margin: 16px 0; word-break: break-all;
+}
+.key-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+
+/* ===== TABELA DE LICENÇAS ===== */
+.table-responsive { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+th { background: var(--primary); color: white; padding: 10px 14px; text-align: left; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tr:hover td { background: var(--bg); }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+.badge-vitalicio { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: white; }
+.badge-anual { background: var(--ok-light); color: var(--ok); }
+.badge-mensal { background: #D6EAF8; color: #2980B9; }
+.badge-ativa { background: var(--ok-light); color: var(--ok); }
+.badge-revogada { background: var(--danger-light); color: var(--danger); }
+
+/* ===== STATS ===== */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: var(--surface); border-radius: var(--radius); padding: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); text-align: center; }
+.stat-number { font-size: 2rem; font-weight: 800; color: var(--primary); }
+.stat-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+/* ===== WHATSAPP ===== */
+.wa-preview { background: #e7fce7; border: 1px solid #b2dfb2; border-radius: var(--radius-sm); padding: 16px; font-size: 0.9rem; line-height: 1.7; color: #1a3a1a; font-family: 'Nunito', sans-serif; white-space: pre-wrap; margin-top: 12px; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== TABS ===== */
+.tabs { display: flex; gap: 4px; margin-bottom: 24px; background: white; border-radius: var(--radius); padding: 6px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+.tab-btn { flex: 1; padding: 12px; border: none; border-radius: var(--radius-sm); cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.9rem; background: transparent; color: var(--text-muted); transition: all .2s; }
+.tab-btn.active { background: var(--primary); color: white; }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; animation: fadeIn .3s ease; }
+
+/* ===== ALERTA ===== */
+.alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 0.9rem; margin-bottom: 12px; font-weight: 600; }
+.alert-ok { background: var(--ok-light); color: var(--ok); border: 1px solid #a8e6c0; }
+.alert-danger { background: var(--danger-light); color: var(--danger); border: 1px solid #f5b7b1; }
+
+@media (max-width: 700px) {
+  .grid-2, .grid-3, .stats-grid { grid-template-columns: 1fr; }
+  .top-bar { padding: 14px 16px; }
+  .main-content { padding: 16px 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN DO VENDEDOR ===== -->
+<div id="vendor-login">
+  <div class="login-box">
+    <div style="font-size:2.5rem;margin-bottom:8px;">🌿</div>
+    <div class="login-logo">VBSD</div>
+    <div class="login-sub">Painel do Vendedor</div>
+    <input type="password" id="vendor-pass" placeholder="Senha do vendedor" onkeydown="if(event.key==='Enter')doVendorLogin()">
+    <button class="login-btn" onclick="doVendorLogin()">🔐 Entrar</button>
+    <div class="login-error" id="vendor-error">Senha incorreta.</div>
+  </div>
+</div>
+
+<!-- ===== PAINEL PRINCIPAL ===== -->
+<div id="painel">
+  <div class="top-bar">
+    <div>
+      <div class="top-bar-logo">🌿 VBSD</div>
+      <div class="top-bar-sub">Painel do Vendedor — Gerenciamento de Licenças</div>
+    </div>
+    <button class="btn-logout" onclick="vendorLogout()">🚪 Sair</button>
+  </div>
+
+  <div class="main-content">
+
+    <!-- Stats -->
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" id="stat-total">0</div>
+        <div class="stat-label">Total de Licenças</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-ativas" style="color:var(--ok);">0</div>
+        <div class="stat-label">Licenças Ativas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-vitalicio" style="color:var(--gold-dark);">0</div>
+        <div class="stat-label">Vitalícias</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-revogadas" style="color:var(--danger);">0</div>
+        <div class="stat-label">Revogadas</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTabPane('gerar')">➕ Gerar Licença</button>
+      <button class="tab-btn" onclick="showTabPane('lista')">📋 Todas as Licenças</button>
+      <button class="tab-btn" onclick="showTabPane('config')">⚙️ Configurações</button>
+    </div>
+
+    <!-- ===== TAB: GERAR LICENÇA ===== -->
+    <div class="tab-pane active" id="pane-gerar">
+      <div class="card">
+        <div class="card-title">➕ Gerar Nova Licença de Venda</div>
+        <div class="grid-2">
+          <div>
+            <div class="form-group">
+              <label class="form-label">Nome do Cliente *</label>
+              <input type="text" class="form-control" id="cli-nome" placeholder="Ex: João da Silva">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Plano *</label>
+              <select class="form-control" id="cli-plano">
+                <option value="Premium Vitalício">⭐ Premium Vitalício</option>
+                <option value="Premium Anual">📅 Premium Anual</option>
+                <option value="Premium Mensal">🗓️ Premium Mensal</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">WhatsApp / Contato</label>
+              <input type="text" class="form-control" id="cli-wa" placeholder="Ex: 61 98402-5224">
+            </div>
+          </div>
+          <div>
+            <div class="form-group">
+              <label class="form-label">E-mail</label>
+              <input type="email" class="form-control" id="cli-email" placeholder="Ex: joao@email.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Observações da Venda</label>
+              <textarea class="form-control" id="cli-obs" rows="3" placeholder="Forma de pagamento, data da venda..."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Prefixo da Chave</label>
+              <select class="form-control" id="cli-prefixo">
+                <option value="VBSD">VBSD (padrão)</option>
+                <option value="PRIV">PRIV (privado)</option>
+                <option value="PREM">PREM (premium)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div id="gerar-msg"></div>
+        <button class="btn btn-gold" onclick="gerarLicenca()" style="width:100%;justify-content:center;font-size:1.05rem;padding:14px;">
+          🔑 Gerar Licença Automaticamente
+        </button>
+      </div>
+
+      <!-- Resultado -->
+      <div class="license-result" id="license-result">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div style="font-size:2.5rem;">🏆</div>
+          <div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold-dark);">Licença Gerada com Sucesso!</div>
+            <div style="font-size:0.85rem;color:var(--text-muted);" id="res-cliente-info">—</div>
+          </div>
+        </div>
+        <div class="key-display" id="res-chave">—</div>
+        <div class="key-actions">
+          <button class="btn-copy" onclick="copiarChave()">📋 Copiar Chave</button>
+          <button class="btn btn-primary btn-sm" onclick="abrirWhatsApp()">📱 Enviar via WhatsApp</button>
+          <button class="btn btn-secondary btn-sm" onclick="copiarMensagem()">💬 Copiar Mensagem Completa</button>
+        </div>
+        <div style="margin-top:16px;">
+          <div style="font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Prévia da mensagem para o cliente:</div>
+          <div class="wa-preview" id="wa-preview">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: LISTA DE LICENÇAS ===== -->
+    <div class="tab-pane" id="pane-lista">
+      <div class="card">
+        <div class="card-title" style="justify-content:space-between;flex-wrap:wrap;gap:10px;">
+          <span>📋 Todas as Licenças Geradas</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input type="text" id="busca-licenca" class="form-control" placeholder="Buscar por nome ou chave..." style="width:220px;padding:8px 12px;font-size:0.88rem;" oninput="renderTabela()">
+            <button class="btn btn-secondary btn-sm" onclick="exportarCSV()">📥 Exportar CSV</button>
+            <button class="btn btn-secondary btn-sm" onclick="exportarBackup()">💾 Backup JSON</button>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nome do Cliente</th>
+                <th>Chave de Licença</th>
+                <th>Plano</th>
+                <th>Data de Geração</th>
+                <th>Contato</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="licencas-tbody"></tbody>
+          </table>
+        </div>
+        <div id="lista-vazia" style="text-align:center;padding:40px;color:var(--text-muted);display:none;">
+          <div style="font-size:3rem;margin-bottom:12px;">📭</div>
+          <div>Nenhuma licença gerada ainda.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: CONFIGURAÇÕES ===== -->
+    <div class="tab-pane" id="pane-config">
+      <div class="card">
+        <div class="card-title">⚙️ Configurações do Painel</div>
+        <div class="form-group">
+          <label class="form-label">Senha do Vendedor (atual)</label>
+          <input type="password" class="form-control" id="cfg-senha-atual" placeholder="Senha atual">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nova Senha</label>
+          <input type="password" class="form-control" id="cfg-senha-nova" placeholder="Nova senha">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirmar Nova Senha</label>
+          <input type="password" class="form-control" id="cfg-senha-conf" placeholder="Confirmar nova senha">
+        </div>
+        <div id="cfg-msg"></div>
+        <button class="btn btn-primary" onclick="alterarSenha()">🔒 Alterar Senha</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📲 Mensagem Padrão para o Cliente</div>
+        <div class="form-group">
+          <label class="form-label">Texto da mensagem (use {NOME}, {CHAVE}, {PLANO})</label>
+          <textarea class="form-control" id="cfg-msg-padrao" rows="8"></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="salvarMsgPadrao()">💾 Salvar Mensagem</button>
+        <button class="btn btn-secondary" onclick="resetarMsgPadrao()" style="margin-left:8px;">↩️ Restaurar Padrão</button>
+      </div>
+
+      <div class="card" style="border:2px solid var(--danger);">
+        <div class="card-title" style="color:var(--danger);">⚠️ Zona de Perigo</div>
+        <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:16px;">Estas ações são irreversíveis. Faça um backup antes de prosseguir.</p>
+        <button class="btn btn-danger" onclick="limparTodasLicencas()">🗑️ Apagar Todas as Licenças</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CONFIGURAÇÃO — ALTERE A SENHA PADRÃO DO VENDEDOR AQUI
+// ============================================================
+const VENDOR_PASS_KEY = 'vbsd_vendor_pass';
+const DEFAULT_VENDOR_PASS = 'vbsd@vendedor2026';
+
+// ============================================================
+// CHAVE SECRETA para assinar as licenças (NÃO ALTERE após gerar licenças)
+// Esta chave é usada para validar as licenças no app principal
+// ============================================================
+const LICENSE_SECRET = 'VBSD2026@SECRET#KEY$DIABETES';
+
+// ============================================================
+// MENSAGEM PADRÃO
+// ============================================================
+const MSG_PADRAO_DEFAULT = `Olá, {NOME}! 🌿
+
+Sua licença do *VBSD – Viva Bem Sem Diabetes* foi ativada com sucesso!
+
+🔑 *Chave de Licença:*
+{CHAVE}
+
+📦 *Plano:* {PLANO}
+
+*Como ativar:*
+1. Abra o aplicativo VBSD
+2. Insira sua senha de acesso
+3. Na tela de licença, digite a chave acima
+4. Clique em "Ativar Licença"
+
+Em caso de dúvidas, entre em contato:
+📱 +55 61 98402-5224
+
+Bom proveito e boa saúde! 💚`;
+
+// ============================================================
+// FUNÇÕES UTILITÁRIAS
+// ============================================================
+function save(key, data) { localStorage.setItem('vbsd_vendor_' + key, JSON.stringify(data)); }
+function load(key, def) { const v = localStorage.getItem('vbsd_vendor_' + key); return v ? JSON.parse(v) : def; }
+
+function getVendorPass() {
+  return localStorage.getItem(VENDOR_PASS_KEY) || DEFAULT_VENDOR_PASS;
+}
+
+function getMsgPadrao() {
+  return localStorage.getItem('vbsd_vendor_msg_padrao') || MSG_PADRAO_DEFAULT;
+}
+
+// ============================================================
+// GERAÇÃO DE CHAVE CRIPTOGRAFADA
+// Algoritmo: hash determinístico baseado em nome + plano + timestamp + secret
+// ============================================================
+function gerarChaveUnica(nome, plano, prefixo, timestamp) {
+  const seed = nome.toUpperCase().replace(/\s+/g, '') + plano + timestamp + LICENSE_SECRET;
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    const char = seed.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  const abs = Math.abs(hash);
+  // Gerar 12 caracteres alfanuméricos a partir do hash
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let part = '';
+  let n = abs;
+  for (let i = 0; i < 12; i++) {
+    part += chars[n % chars.length];
+    n = Math.floor(n / chars.length) + (i * 7919);
+    if (n === 0) n = abs + i + 1;
+  }
+  // Formato: PREFIXO-XXXX-XXXX-XXXX
+  const p1 = part.substring(0, 4);
+  const p2 = part.substring(4, 8);
+  const p3 = part.substring(8, 12);
+  return `${prefixo}-${p1}-${p2}-${p3}`;
+}
+
+// Gerar checksum para validação no app
+function gerarChecksum(chave) {
+  const seed = chave + LICENSE_SECRET;
+  let hash = 5381;
+  for (let i = 0; i < seed.length; i++) {
+    hash = ((hash << 5) + hash) + seed.charCodeAt(i);
+    hash = hash & hash;
+  }
+  return Math.abs(hash).toString(36).toUpperCase().substring(0, 6);
+}
+
+// ============================================================
+// LOGIN DO VENDEDOR
+// ============================================================
+function doVendorLogin() {
+  const pass = document.getElementById('vendor-pass').value;
+  if (pass === getVendorPass()) {
+    document.getElementById('vendor-login').style.display = 'none';
+    document.getElementById('painel').style.display = 'block';
+    initPainel();
+  } else {
+    const err = document.getElementById('vendor-error');
+    err.style.display = 'block';
+    setTimeout(() => { err.style.display = 'none'; }, 3000);
+  }
+}
+
+function vendorLogout() {
+  document.getElementById('vendor-login').style.display = 'flex';
+  document.getElementById('painel').style.display = 'none';
+  document.getElementById('vendor-pass').value = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('vendor-login').style.display !== 'none') doVendorLogin();
+});
+
+// ============================================================
+// INICIALIZAÇÃO
+// ============================================================
+function initPainel() {
+  renderStats();
+  renderTabela();
+  // Carregar mensagem padrão no campo de config
+  document.getElementById('cfg-msg-padrao').value = getMsgPadrao();
+}
+
+// ============================================================
+// GERAR LICENÇA
+// ============================================================
+function gerarLicenca() {
+  const nome = document.getElementById('cli-nome').value.trim();
+  const plano = document.getElementById('cli-plano').value;
+  const wa = document.getElementById('cli-wa').value.trim();
+  const email = document.getElementById('cli-email').value.trim();
+  const obs = document.getElementById('cli-obs').value.trim();
+  const prefixo = document.getElementById('cli-prefixo').value;
+
+  if (!nome) {
+    showAlert('gerar-msg', '⚠️ Informe o nome do cliente.', 'danger');
+    return;
+  }
+
+  // Lógica de expiração baseada no plano
+  let exp = '0'; // Vitalício por padrão
+  const agora = Date.now();
+  if (plano === 'Premium Anual') exp = (agora + (365 * 24 * 60 * 60 * 1000)).toString();
+  if (plano === 'Premium Mensal') exp = (agora + (30 * 24 * 60 * 60 * 1000)).toString();
+
+  // Gerar hash para validação no App
+  const hash = btoa(nome + plano + exp + LICENSE_SECRET).substring(0, 8);
+  const dataStr = btoa(`${nome}|${plano}|${exp}|${hash}`);
+  
+  // Chave final: PREFIXO-XXXX-XXXX-PAYLOAD
+  // O payload contém os dados criptografados para o app validar sem precisar de internet
+  const p1 = Math.random().toString(36).substring(2, 6).toUpperCase();
+  const p2 = Math.random().toString(36).substring(2, 6).toUpperCase();
+  const chave = `${prefixo}-${p1}-${p2}-${dataStr}`;
+
+  const licenca = {
+    id: agora,
+    nome,
+    plano,
+    chave,
+    exp,
+    wa,
+    email,
+    obs,
+    dataGeracao: new Date().toISOString(),
+    dataFormatada: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+    status: 'ativa'
+  };
+
+  // Salvar na lista local do vendedor
+  const lista = load('licencas', []);
+  lista.push(licenca);
+  save('licencas', lista);
+
+  // Sincronizar com o App (compartilhamento via localStorage)
+  const appLicenses = JSON.parse(localStorage.getItem('vbsd_vendor_licenses') || '{}');
+  appLicenses[chave] = { nome, plano, exp: exp === '0' ? 'Vitalício' : new Date(parseInt(exp)).toLocaleDateString() };
+  localStorage.setItem('vbsd_vendor_licenses', JSON.stringify(appLicenses));
+
+  // Mostrar resultado
+  mostrarResultado(licenca);
+  renderStats();
+  renderTabela();
+
+  // Limpar formulário
+  document.getElementById('cli-nome').value = '';
+  document.getElementById('cli-wa').value = '';
+  document.getElementById('cli-email').value = '';
+  document.getElementById('cli-obs').value = '';
+}
+
+function mostrarResultado(lic) {
+  const result = document.getElementById('license-result');
+  document.getElementById('res-chave').textContent = lic.chave;
+  document.getElementById('res-cliente-info').textContent = `${lic.nome} — ${lic.plano} — Gerada em ${lic.dataFormatada}`;
+
+  const msg = getMsgPadrao()
+    .replace(/{NOME}/g, lic.nome)
+    .replace(/{CHAVE}/g, lic.chave)
+    .replace(/{PLANO}/g, lic.plano);
+  document.getElementById('wa-preview').textContent = msg;
+
+  result.classList.add('show');
+  result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function copiarChave() {
+  const chave = document.getElementById('res-chave').textContent;
+  navigator.clipboard.writeText(chave).then(() => {
+    const btn = event.target;
+    btn.textContent = '✅ Copiado!';
+    setTimeout(() => { btn.textContent = '📋 Copiar Chave'; }, 2000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = chave;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('Chave copiada!');
+  });
+}
+
+function copiarMensagem() {
+  const msg = document.getElementById('wa-preview').textContent;
+  navigator.clipboard.writeText(msg).then(() => {
+    alert('Mensagem copiada!');
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = msg;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('Mensagem copiada!');
+  });
+}
+
+function abrirWhatsApp() {
+  const wa = document.getElementById('cli-wa') ? document.getElementById('cli-wa').value : '';
+  const msg = document.getElementById('wa-preview').textContent;
+  const encoded = encodeURIComponent(msg);
+  const waNum = wa.replace(/\D/g, '');
+  if (waNum.length >= 10) {
+    window.open(`https://wa.me/55${waNum}?text=${encoded}`, '_blank');
+  } else {
+    window.open(`https://wa.me/?text=${encoded}`, '_blank');
+  }
+}
+
+// ============================================================
+// TABELA DE LICENÇAS
+// ============================================================
+function renderTabela() {
+  const lista = load('licencas', []);
+  const busca = (document.getElementById('busca-licenca')?.value || '').toLowerCase();
+  const tbody = document.getElementById('licencas-tbody');
+  const vazia = document.getElementById('lista-vazia');
+
+  const filtrada = lista.filter(l =>
+    l.nome.toLowerCase().includes(busca) ||
+    l.chave.toLowerCase().includes(busca) ||
+    (l.email || '').toLowerCase().includes(busca)
+  ).sort((a, b) => b.id - a.id);
+
+  if (filtrada.length === 0) {
+    tbody.innerHTML = '';
+    vazia.style.display = 'block';
+    return;
+  }
+  vazia.style.display = 'none';
+
+  tbody.innerHTML = filtrada.map((l, i) => {
+    const planoBadge = l.plano === 'Premium Vitalício' ? 'vitalicio' : l.plano === 'Premium Anual' ? 'anual' : 'mensal';
+    const statusBadge = l.status === 'ativa' ? 'ativa' : 'revogada';
+    const contato = [l.wa, l.email].filter(Boolean).join(' / ') || '—';
+    return `<tr>
+      <td style="color:var(--text-muted);font-size:0.8rem;">${i + 1}</td>
+      <td><strong>${l.nome}</strong></td>
+      <td><code style="font-size:0.85rem;letter-spacing:1px;color:var(--gold-dark);">${l.chave}</code></td>
+      <td><span class="badge badge-${planoBadge}">${l.plano}</span></td>
+      <td style="font-size:0.82rem;">${l.dataFormatada}</td>
+      <td style="font-size:0.82rem;">${contato}</td>
+      <td><span class="badge badge-${statusBadge}">${l.status === 'ativa' ? '✅ Ativa' : '🚫 Revogada'}</span></td>
+      <td>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;">
+          <button class="btn btn-secondary btn-sm" onclick="reenviarLicenca(${l.id})" title="Reenviar">📤</button>
+          <button class="btn btn-secondary btn-sm" onclick="toggleStatus(${l.id})" title="${l.status === 'ativa' ? 'Revogar' : 'Reativar'}">${l.status === 'ativa' ? '🚫' : '✅'}</button>
+          <button class="btn btn-danger btn-sm" onclick="excluirLicenca(${l.id})" title="Excluir">🗑️</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleStatus(id) {
+  const lista = load('licencas', []);
+  const lic = lista.find(l => l.id === id);
+  if (!lic) return;
+  const acao = lic.status === 'ativa' ? 'revogar' : 'reativar';
+  if (confirm(`Deseja ${acao} a licença de ${lic.nome}?`)) {
+    lic.status = lic.status === 'ativa' ? 'revogada' : 'ativa';
+    save('licencas', lista);
+    
+    // Atualizar sincronização com o App
+    const appLicenses = JSON.parse(localStorage.getItem('vbsd_vendor_licenses') || '{}');
+    if (lic.status === 'ativa') {
+      appLicenses[lic.chave] = { nome: lic.nome, plano: lic.plano, exp: lic.exp === '0' ? 'Vitalício' : new Date(parseInt(lic.exp)).toLocaleDateString() };
+    } else {
+      delete appLicenses[lic.chave];
+    }
+    localStorage.setItem('vbsd_vendor_licenses', JSON.stringify(appLicenses));
+    
+    renderTabela();
+    renderStats();
+  }
+}
+
+function excluirLicenca(id) {
+  const lista = load('licencas', []);
+  const lic = lista.find(l => l.id === id);
+  if (!lic) return;
+  if (confirm(`Excluir permanentemente a licença de ${lic.nome}?\n\nChave: ${lic.chave}`)) {
+    save('licencas', lista.filter(l => l.id !== id));
+    renderTabela();
+    renderStats();
+  }
+}
+
+function reenviarLicenca(id) {
+  const lista = load('licencas', []);
+  const lic = lista.find(l => l.id === id);
+  if (!lic) return;
+  mostrarResultado(lic);
+  showTabPane('gerar');
+}
+
+// ============================================================
+// STATS
+// ============================================================
+function renderStats() {
+  const lista = load('licencas', []);
+  document.getElementById('stat-total').textContent = lista.length;
+  document.getElementById('stat-ativas').textContent = lista.filter(l => l.status === 'ativa').length;
+  document.getElementById('stat-vitalicio').textContent = lista.filter(l => l.plano === 'Premium Vitalício').length;
+  document.getElementById('stat-revogadas').textContent = lista.filter(l => l.status === 'revogada').length;
+}
+
+// ============================================================
+// EXPORTAR
+// ============================================================
+function exportarCSV() {
+  const lista = load('licencas', []);
+  if (lista.length === 0) { alert('Nenhuma licença para exportar.'); return; }
+  const header = 'Nome,Chave,Plano,Data,WhatsApp,Email,Status\n';
+  const rows = lista.map(l => `"${l.nome}","${l.chave}","${l.plano}","${l.dataFormatada}","${l.wa || ''}","${l.email || ''}","${l.status}"`).join('\n');
+  const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `VBSD_licencas_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+}
+
+function exportarBackup() {
+  const lista = load('licencas', []);
+  const blob = new Blob([JSON.stringify({ licencas: lista, exportadoEm: new Date().toISOString() }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `VBSD_backup_licencas_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+}
+
+// ============================================================
+// CONFIGURAÇÕES
+// ============================================================
+function alterarSenha() {
+  const atual = document.getElementById('cfg-senha-atual').value;
+  const nova = document.getElementById('cfg-senha-nova').value;
+  const conf = document.getElementById('cfg-senha-conf').value;
+
+  if (atual !== getVendorPass()) {
+    showAlert('cfg-msg', '❌ Senha atual incorreta.', 'danger'); return;
+  }
+  if (nova.length < 6) {
+    showAlert('cfg-msg', '❌ A nova senha deve ter ao menos 6 caracteres.', 'danger'); return;
+  }
+  if (nova !== conf) {
+    showAlert('cfg-msg', '❌ As senhas não coincidem.', 'danger'); return;
+  }
+  localStorage.setItem(VENDOR_PASS_KEY, nova);
+  showAlert('cfg-msg', '✅ Senha alterada com sucesso!', 'ok');
+  document.getElementById('cfg-senha-atual').value = '';
+  document.getElementById('cfg-senha-nova').value = '';
+  document.getElementById('cfg-senha-conf').value = '';
+}
+
+function salvarMsgPadrao() {
+  const msg = document.getElementById('cfg-msg-padrao').value;
+  localStorage.setItem('vbsd_vendor_msg_padrao', msg);
+  showAlert('cfg-msg', '✅ Mensagem salva!', 'ok');
+}
+
+function resetarMsgPadrao() {
+  document.getElementById('cfg-msg-padrao').value = MSG_PADRAO_DEFAULT;
+  localStorage.setItem('vbsd_vendor_msg_padrao', MSG_PADRAO_DEFAULT);
+  showAlert('cfg-msg', '✅ Mensagem restaurada ao padrão.', 'ok');
+}
+
+function limparTodasLicencas() {
+  if (confirm('ATENÇÃO: Isso apagará TODAS as licenças permanentemente.\n\nFaça um backup antes!\n\nDeseja continuar?')) {
+    if (confirm('Tem certeza absoluta? Esta ação NÃO pode ser desfeita.')) {
+      save('licencas', []);
+      renderTabela();
+      renderStats();
+      showAlert('cfg-msg', '✅ Todas as licenças foram apagadas.', 'ok');
+    }
+  }
+}
+
+// ============================================================
+// TABS
+// ============================================================
+function showTabPane(id) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('pane-' + id).classList.add('active');
+  const idx = { gerar: 0, lista: 1, config: 2 }[id];
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  if (id === 'lista') renderTabela();
+}
+
+// ============================================================
+// UTILITÁRIOS
+// ============================================================
+function showAlert(containerId, msg, type) {
+  const el = document.getElementById(containerId);
+  if (el) {
+    el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+    setTimeout(() => { el.innerHTML = ''; }, 4000);
+  }
+}
+</script>
+</body>
+</html>
